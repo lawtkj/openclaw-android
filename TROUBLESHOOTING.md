@@ -16,7 +16,7 @@
 **Problem**: After typing "y" at a prompt, you see "No command y found"
 
 **Solution**:
-This is fixed in v2026.2.8. Update your installer:
+This is fixed in v2026.2.8 (just need to type yes or no). Update your installer:
 ```bash
 # Download latest version
 curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
