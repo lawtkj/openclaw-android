@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 # Script Configuration
-SCRIPT_VERSION="2026.2.7"
+SCRIPT_VERSION="2026.2.8"
 SCRIPT_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh"
 VERSION_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/VERSION"
 REPO_URL="https://github.com/iyeoh88-svg/openclaw-android"
@@ -51,9 +51,9 @@ show_banner() {
     cat << "EOF"
     ╔═══════════════════════════════════════════════╗
     ║                                               ║
-    ║           🦞 OpenClaw for Android 🦞           ║
+    ║           🦞 OpenClaw for Android 🦞          ║
     ║                                               ║
-    ║      Automated Installation & Setup Tool      ║
+    ║      Automated Installation & Setup Tool     ║
     ║                                               ║
     ╚═══════════════════════════════════════════════╝
 EOF
@@ -68,19 +68,27 @@ check_for_updates() {
     log_step "Checking for installer updates..."
     
     if command -v curl &> /dev/null; then
-        LATEST_VERSION=$(curl -s "$VERSION_URL" 2>/dev/null || echo "$SCRIPT_VERSION")
+        # Get latest version and trim whitespace
+        LATEST_VERSION=$(curl -s "$VERSION_URL" 2>/dev/null | tr -d '[:space:]')
+        
+        # If curl failed or returned empty, use current version
+        if [ -z "$LATEST_VERSION" ]; then
+            LATEST_VERSION="$SCRIPT_VERSION"
+        fi
         
         if [ "$LATEST_VERSION" != "$SCRIPT_VERSION" ]; then
             log_warn "New installer version available: $LATEST_VERSION (current: $SCRIPT_VERSION)"
             echo -e "\n${YELLOW}Would you like to update the installer? (y/n)${NC}"
-            read -r response
+            # Read from /dev/tty to ensure interactive input works in Termux
+            read -r response < /dev/tty
             
             if [[ "$response" =~ ^[Yy]$ ]]; then
                 log_info "Downloading latest installer..."
-                curl -fsSL "$SCRIPT_URL" -o /tmp/install_new.sh
-                chmod +x /tmp/install_new.sh
+                # Use $HOME instead of /tmp to avoid permission issues
+                curl -fsSL "$SCRIPT_URL" -o "$HOME/install_new.sh"
+                chmod +x "$HOME/install_new.sh"
                 log_success "Installer updated! Restarting with new version..."
-                exec /tmp/install_new.sh "$@"
+                exec "$HOME/install_new.sh" "$@"
             else
                 log_info "Continuing with current version..."
             fi
@@ -112,7 +120,7 @@ check_android_version() {
     if [ "${ANDROID_VERSION%%.*}" -lt 12 ]; then
         log_warn "Android 12+ is recommended for best compatibility"
         echo -e "${YELLOW}Continue anyway? (y/n)${NC}"
-        read -r response
+        read -r response < /dev/tty
         if [[ ! "$response" =~ ^[Yy]$ ]]; then
             log_info "Installation cancelled"
             exit 0
@@ -166,7 +174,7 @@ install_debian() {
             proot-distro install debian
         else
             echo -e "${YELLOW}Debian is already installed. Reinstall? (y/n)${NC}"
-            read -r response
+            read -r response < /dev/tty
             if [[ "$response" =~ ^[Yy]$ ]]; then
                 proot-distro remove debian -y
                 proot-distro install debian
@@ -278,7 +286,7 @@ alias claw-logs='tail -f ~/.openclaw/logs/*.log'
 # Welcome message
 echo ""
 echo -e "\033[0;36m╔═══════════════════════════════════════╗\033[0m"
-echo -e "\033[0;36m║  🦞 OpenClaw Environment Ready 🦞      ║\033[0m"
+echo -e "\033[0;36m║  🦞 OpenClaw Environment Ready 🦞     ║\033[0m"
 echo -e "\033[0;36m╚═══════════════════════════════════════╝\033[0m"
 echo ""
 echo -e "\033[0;32mQuick Commands:\033[0m"
@@ -296,7 +304,7 @@ log_success "Debian environment setup complete!"
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║                                               ║${NC}"
-echo -e "${GREEN}║         ✅ Installation Complete! ✅           ║${NC}"
+echo -e "${GREEN}║         ✅ Installation Complete! ✅          ║${NC}"
 echo -e "${GREEN}║                                               ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
@@ -356,7 +364,7 @@ show_completion() {
     
     echo -e "${GREEN}╔═══════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║                                                   ║${NC}"
-    echo -e "${GREEN}║     🎉 OpenClaw Installation Complete! 🎉          ║${NC}"
+    echo -e "${GREEN}║     🎉 OpenClaw Installation Complete! 🎉        ║${NC}"
     echo -e "${GREEN}║                                                   ║${NC}"
     echo -e "${GREEN}╚═══════════════════════════════════════════════════╝${NC}"
     echo ""
