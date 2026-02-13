@@ -9,6 +9,24 @@
 
 > **Automated installer for running OpenClaw AI agent system on Android devices via Termux**
 
+---
+
+## ⚠️ Important Disclaimer
+
+**This project is an independent installer/automation tool created by the community.**
+
+- ✅ **What this is**: An automated installation script that makes it easy to run OpenClaw on Android
+- ❌ **What this is NOT**: I did not create OpenClaw itself
+- 🔗 **OpenClaw**: Visit the [official OpenClaw project](https://github.com/openclaw/openclaw) for the actual AI agent framework
+- 👤 **Creator**: This installer was created by [@iyeoh88-svg](https://github.com/iyeoh88-svg) to simplify the Android installation process
+- 💡 **Purpose**: To automate the complex setup process and make OpenClaw accessible on Android devices
+
+**All credit for OpenClaw goes to its original creators and maintainers.**
+
+📄 **[Read Full Disclaimer](DISCLAIMER.md)** - Please read to understand the scope of this project
+
+---
+
 OpenClaw is a powerful AI agent framework that can now run natively on Android devices. This installer automates the entire setup process, handling environment configuration, dependency installation, and networking fixes specific to Android.
 
 ## ✨ Features
