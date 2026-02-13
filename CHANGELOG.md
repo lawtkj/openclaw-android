@@ -5,6 +5,19 @@ All notable changes to the OpenClaw Android Installer will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026.2.8] - 2026-02-13
+
+### Fixed
+- 🐛 Fixed version comparison showing incorrect concatenated versions
+- 🐛 Fixed "No command y found" error when responding to prompts
+- 🐛 Fixed auto-update download using /tmp (permission denied)
+- 🔧 All user input prompts now use `/dev/tty` for proper input handling in Termux
+
+### Changed
+- Improved version checking with whitespace trimming
+- Auto-update now downloads to `$HOME` instead of `/tmp`
+- Better error handling for empty version responses
+
 ## [2026.2.7] - 2026-02-13
 
 ### Fixed
@@ -45,6 +58,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TROUBLESHOOTING.md with solutions to common issues
 - Inline script documentation
 - Usage examples and best practices
+
+## [Unreleased]
+
+### Planned
+- 🎥 Video tutorial
+- 🔌 Termux:Widget integration for home screen shortcuts
+- 📱 Android 11 compatibility testing
+- 🌐 Multi-language support
+- 🎨 Custom themes for TUI
+- 📊 Performance benchmarking tools
+- 🔔 Desktop notifications integration
+- 💾 Backup and restore functionality
+- 🔄 One-command update for OpenClaw and all dependencies
+- 🐳 Alternative installation via Docker (if possible on Android)
+
+### Under Consideration
+- GUI installer (Termux:API integration)
+- Automatic log rotation
+- Performance profiling mode
+- Cloud sync for configurations
+- Plugin system for extensions
 
 ## Version History
 
