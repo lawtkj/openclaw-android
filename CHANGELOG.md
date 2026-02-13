@@ -21,15 +21,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  Fixed "integer expression expected" error when storage check fails
   - Added proper null/empty checks before numeric comparisons
   - Fallback to user confirmation if storage can't be determined
+- **CRITICAL**: Fixed "nvm: command not found" error during Node.js installation
+  - Added multiple fallback methods to load NVM
+  - Improved NVM sourcing with better error detection
+  - Added verification steps before attempting to use nvm
+  - Now tries: direct source, bashrc source, and manual load
 
 ### Changed
 - Improved error messages for storage check failures
 - Added user prompt to continue if storage check fails (rather than hard exit)
 - Better validation of curl responses in version checking
+- Enhanced NVM loading with 3-tier fallback system
+- Better error messages when NVM fails to load
+- Added explicit verification that nvm command is available
 
 ### Context
-These fixes address issues reported by users running F-Droid Termux on Android 16. The interactive dpkg prompt was the most critical issue preventing unattended installation.
-
+These fixes address issues reported by users running F-Droid Termux on Android 16. The interactive dpkg prompt was the most critical issue preventing unattended installation. After NVM installation, the script needs to explicitly source it before use. Some environments don't automatically load it, causing "command not found" errors.
 
 ## [2026.2.9] - 2026-02-13
 
