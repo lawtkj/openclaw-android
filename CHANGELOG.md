@@ -5,6 +5,32 @@ All notable changes to the OpenClaw Android Installer will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026.2.10] - 2026-02-13
+
+### Fixed
+-  **CRITICAL**: Fixed `pkg upgrade` hanging on interactive prompts (dpkg config file conflicts)
+  - Now uses `apt-get upgrade` with `--force-confold` to avoid prompts
+  - Sets `DEBIAN_FRONTEND=noninteractive` to prevent any interactive dialogs
+-  Fixed `df: Unknown option 'm'` error on some Termux versions
+  - Changed from `df -m` to `df -k` (more universally supported)
+  - Added proper validation and error handling for storage check
+-  Fixed version comparison validation
+  - Added regex validation to ensure version format is correct (e.g., 2026.2.10)
+  - Only uses first line from VERSION file to prevent concatenation
+  - Better handling of malformed version responses
+-  Fixed "integer expression expected" error when storage check fails
+  - Added proper null/empty checks before numeric comparisons
+  - Fallback to user confirmation if storage can't be determined
+
+### Changed
+- Improved error messages for storage check failures
+- Added user prompt to continue if storage check fails (rather than hard exit)
+- Better validation of curl responses in version checking
+
+### Context
+These fixes address issues reported by users running F-Droid Termux on Android 16. The interactive dpkg prompt was the most critical issue preventing unattended installation.
+
+
 ## [2026.2.9] - 2026-02-13
 
 ### Added
