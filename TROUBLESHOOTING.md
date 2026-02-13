@@ -16,7 +16,7 @@
 **Problem**: After typing "y" at a prompt, you see "No command y found"
 
 **Solution**:
-This is fixed in v2026.2.8 (just need to type yes or no). Update your installer:
+This is fixed in v2026.2.8. Update your installer: (type in "yes" or "no" as reply)
 ```bash
 # Download latest version
 curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
@@ -25,6 +25,41 @@ chmod +x install.sh
 ```
 
 **Why it happened**: The script wasn't reading from the terminal device properly in Termux.
+
+---
+
+### ❌ "df: Unknown option 'm'" error
+
+**Problem**: `df: Unknown option 'm'` during storage check
+
+**Solution**:
+This is fixed in v2026.2.10. Update your installer:
+```bash
+curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+**Why it happened**: Older Termux versions don't support `df -m`. Now uses `df -k` which is more compatible.
+
+---
+
+### ❌ Package upgrade hangs waiting for input
+
+**Problem**: Installation stops at "What would you like to do about it?" prompt during package upgrade
+
+**Solution**:
+This is fixed in v2026.2.10. The installer now handles config file conflicts automatically.
+
+Update to latest version:
+```bash
+curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+**Manual workaround** (if needed):
+During the prompt, press `N` to keep your current config, then re-run the installer.
 
 ---
 
