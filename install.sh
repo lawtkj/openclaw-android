@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 ################################################################################
 # OpenClaw Android Installer
-# Version: 2026.2.9
+# Version: 2026.2.10
 # Description: Automated installer for OpenClaw on Android via Termux
 # Repository: https://github.com/iyeoh88-svg/openclaw-android
 ################################################################################
@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 # Script Configuration
-SCRIPT_VERSION="2026.2.9"
+SCRIPT_VERSION="2026.2.10"
 SCRIPT_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh"
 VERSION_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/VERSION"
 REPO_URL="https://github.com/iyeoh88-svg/openclaw-android"
@@ -61,6 +61,9 @@ EOF
     echo -e "  Version: ${GREEN}${SCRIPT_VERSION}${NC}"
     echo -e "  Repository: ${BLUE}${REPO_URL}${NC}"
     echo -e ""
+    echo -e "${YELLOW}  ⚠️  DISCLAIMER:${NC} This is a community-created installer."
+    echo -e "      OpenClaw framework © its original creators"
+    echo -e ""
 }
 
 # Check for updates
@@ -68,8 +71,14 @@ check_for_updates() {
     log_step "Checking for installer updates..."
     
     if command -v curl &> /dev/null; then
-        # Get latest version and trim whitespace
-        LATEST_VERSION=$(curl -s "$VERSION_URL" 2>/dev/null | tr -d '[:space:]')
+        # Get latest version, trim whitespace, and only use first line
+        LATEST_VERSION=$(curl -s "$VERSION_URL" 2>/dev/null | head -1 | tr -d '[:space:]')
+        
+        # Validate version format (should be like 2026.2.9)
+        if ! [[ "$LATEST_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            log_warn "Unable to check for updates (invalid version format received)"
+            LATEST_VERSION="$SCRIPT_VERSION"
+        fi
         
         # If curl failed or returned empty, use current version
         if [ -z "$LATEST_VERSION" ]; then
@@ -78,7 +87,7 @@ check_for_updates() {
         
         if [ "$LATEST_VERSION" != "$SCRIPT_VERSION" ]; then
             log_warn "New installer version available: $LATEST_VERSION (current: $SCRIPT_VERSION)"
-            echo -e "\n${YELLOW}Would you like to update the installer? (yes/no)${NC}"
+            echo -e "\n${YELLOW}Would you like to update the installer? (y/n)${NC}"
             # Read from /dev/tty to ensure interactive input works in Termux
             read -r response < /dev/tty
             
@@ -134,7 +143,24 @@ check_android_version() {
 check_storage() {
     log_step "Checking available storage..."
     
-    AVAILABLE_MB=$(df -m $HOME | tail -1 | awk '{print $4}')
+    # Use df -k (more compatible) and convert to MB
+    AVAILABLE_KB=$(df -k "$HOME" 2>/dev/null | tail -1 | awk '{print $4}')
+    
+    # Check if we got a valid number
+    if [ -z "$AVAILABLE_KB" ] || ! [[ "$AVAILABLE_KB" =~ ^[0-9]+$ ]]; then
+        log_warn "Unable to check available storage automatically"
+        log_info "Please ensure you have at least 2GB free space"
+        echo -e "${YELLOW}Continue anyway? (y/n)${NC}"
+        read -r response < /dev/tty
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            log_info "Installation cancelled"
+            exit 0
+        fi
+        return 0
+    fi
+    
+    # Convert KB to MB
+    AVAILABLE_MB=$((AVAILABLE_KB / 1024))
     log_info "Available storage: ${AVAILABLE_MB}MB"
     
     if [ "$AVAILABLE_MB" -lt 2048 ]; then
@@ -153,7 +179,10 @@ install_termux_packages() {
     pkg update -y
     
     log_info "Upgrading existing packages..."
-    pkg upgrade -y
+    # Set environment to avoid interactive prompts
+    export DEBIAN_FRONTEND=noninteractive
+    # Use apt options to automatically handle config file changes
+    apt-get upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
     
     log_info "Installing proot-distro..."
     pkg install proot-distro -y
@@ -373,7 +402,7 @@ show_completion() {
     echo ""
     echo -e "${CYAN}📝 Quick Start Guide:${NC}"
     echo ""
-    echo -e "${YELLOW}Step 1(first-time):${NC} Setup openclaw config"
+    echo -e "${YELLOW}Step 1:${NC} Run OpenClaw Wizard (First Timer)"
     echo "  $ proot-distro login debian"
     echo "  $ openclaw onboard"
     echo ""
@@ -395,7 +424,7 @@ show_completion() {
     echo "  Run 'termux-wake-lock' in Termux to prevent throttling"
     echo ""
     echo -e "${CYAN}🐛 Issues?${NC}"
-    echo "  Visit: ${REPO_URL}/issues"
+    echo "  Visit: ${BLUE}${REPO_URL}/issues${NC}"
     echo ""
 }
 
