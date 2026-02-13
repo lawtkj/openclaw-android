@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2026.2.9] - 2026-02-13
 
 ### Added
-- 📄 **DISCLAIMER.md** - Comprehensive disclaimer clarifying project scope
-- ⚠️ Attribution notices in README and installer banner
-- 🙏 Proper credit to OpenClaw's original creators throughout documentation
-- 📝 Updated marketing materials with attribution guidelines
+-  **DISCLAIMER.md** - Comprehensive disclaimer clarifying project scope
+-  Attribution notices in README and installer banner
+-  Proper credit to OpenClaw's original creators throughout documentation
+-  Updated marketing materials with attribution guidelines
 
 ### Changed
 - Clarified in all documentation that this is an installer tool, not OpenClaw itself
@@ -25,10 +25,10 @@ This update ensures proper attribution to OpenClaw's creators and clarifies that
 ## [2026.2.8] - 2026-02-13
 
 ### Fixed
-- 🐛 Fixed version comparison showing incorrect concatenated versions
-- 🐛 Fixed "No command y found" error when responding to prompts
-- 🐛 Fixed auto-update download using /tmp (permission denied)
-- 🔧 All user input prompts now use `/dev/tty` for proper input handling in Termux
+-  Fixed version comparison showing incorrect concatenated versions
+-  Fixed "No command y found" error when responding to prompts
+-  Fixed auto-update download using /tmp (permission denied)
+-  All user input prompts now use `/dev/tty` for proper input handling in Termux
 
 ### Changed
 - Improved version checking with whitespace trimming
@@ -38,7 +38,7 @@ This update ensures proper attribution to OpenClaw's creators and clarifies that
 ## [2026.2.7] - 2026-02-13
 
 ### Fixed
-- 🐛 Fixed "Permission denied" error when creating Debian setup script
+- Fixed "Permission denied" error when creating Debian setup script
 - Changed temporary script location from `/tmp` to `$HOME` to avoid Termux permission issues
 - Added automatic cleanup of setup script after successful installation
 
@@ -48,16 +48,16 @@ This update ensures proper attribution to OpenClaw's creators and clarifies that
 ## [2026.2.6] - 2026-02-12
 
 ### Added
-- 🎉 Initial public release
-- ✅ Fully automated installation script with progress indicators
-- 🔄 Auto-update system that checks for new installer versions
-- 🛠️ Comprehensive error handling and recovery
-- 📝 Detailed documentation (README, GUIDE, TROUBLESHOOTING)
-- 🎨 Colorful CLI output with status indicators
-- ⚙️ Automatic creation of convenience aliases
-- 🔧 Android Error 13 networking fix (shim system)
-- 📊 Storage and system compatibility checks
-- 🎯 Command-line flags (--reinstall, --skip-update-check)
+-  Initial public release
+-  Fully automated installation script with progress indicators
+-  Auto-update system that checks for new installer versions
+-  Comprehensive error handling and recovery
+-  Detailed documentation (README, GUIDE, TROUBLESHOOTING)
+-  Colorful CLI output with status indicators
+-  Automatic creation of convenience aliases
+-  Android Error 13 networking fix (shim system)
+-  Storage and system compatibility checks
+-  Command-line flags (--reinstall, --skip-update-check)
 
 ### Features
 - Automatic Termux package updates
@@ -79,16 +79,16 @@ This update ensures proper attribution to OpenClaw's creators and clarifies that
 ## [Unreleased]
 
 ### Planned
-- 🎥 Video tutorial
-- 🔌 Termux:Widget integration for home screen shortcuts
-- 📱 Android 11 compatibility testing
-- 🌐 Multi-language support
-- 🎨 Custom themes for TUI
-- 📊 Performance benchmarking tools
-- 🔔 Desktop notifications integration
-- 💾 Backup and restore functionality
-- 🔄 One-command update for OpenClaw and all dependencies
-- 🐳 Alternative installation via Docker (if possible on Android)
+-  Video tutorial
+-  Termux:Widget integration for home screen shortcuts
+-  Android 11 compatibility testing
+-  Multi-language support
+-  Custom themes for TUI
+-  Performance benchmarking tools
+-  Desktop notifications integration
+-  Backup and restore functionality
+-  One-command update for OpenClaw and all dependencies
+-  Alternative installation via Docker (if possible on Android)
 
 ### Under Consideration
 - GUI installer (Termux:API integration)
