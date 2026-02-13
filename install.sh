@@ -51,9 +51,9 @@ show_banner() {
     cat << "EOF"
     ╔═══════════════════════════════════════════════╗
     ║                                               ║
-    ║           🦞 OpenClaw for Android 🦞          ║
+    ║           🦞 OpenClaw for Android 🦞           ║
     ║                                               ║
-    ║      Automated Installation & Setup Tool     ║
+    ║      Automated Installation & Setup Tool      ║
     ║                                               ║
     ╚═══════════════════════════════════════════════╝
 EOF
@@ -78,7 +78,7 @@ check_for_updates() {
         
         if [ "$LATEST_VERSION" != "$SCRIPT_VERSION" ]; then
             log_warn "New installer version available: $LATEST_VERSION (current: $SCRIPT_VERSION)"
-            echo -e "\n${YELLOW}Would you like to update the installer? (y/n)${NC}"
+            echo -e "\n${YELLOW}Would you like to update the installer? (yes/no)${NC}"
             # Read from /dev/tty to ensure interactive input works in Termux
             read -r response < /dev/tty
             
@@ -286,7 +286,7 @@ alias claw-logs='tail -f ~/.openclaw/logs/*.log'
 # Welcome message
 echo ""
 echo -e "\033[0;36m╔═══════════════════════════════════════╗\033[0m"
-echo -e "\033[0;36m║  🦞 OpenClaw Environment Ready 🦞     ║\033[0m"
+echo -e "\033[0;36m║  🦞 OpenClaw Environment Ready 🦞      ║\033[0m"
 echo -e "\033[0;36m╚═══════════════════════════════════════╝\033[0m"
 echo ""
 echo -e "\033[0;32mQuick Commands:\033[0m"
@@ -304,7 +304,7 @@ log_success "Debian environment setup complete!"
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║                                               ║${NC}"
-echo -e "${GREEN}║         ✅ Installation Complete! ✅          ║${NC}"
+echo -e "${GREEN}║         ✅ Installation Complete! ✅           ║${NC}"
 echo -e "${GREEN}║                                               ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
@@ -364,17 +364,21 @@ show_completion() {
     
     echo -e "${GREEN}╔═══════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║                                                   ║${NC}"
-    echo -e "${GREEN}║     🎉 OpenClaw Installation Complete! 🎉        ║${NC}"
+    echo -e "${GREEN}║     🎉 OpenClaw Installation Complete! 🎉          ║${NC}"
     echo -e "${GREEN}║                                                   ║${NC}"
     echo -e "${GREEN}╚═══════════════════════════════════════════════════╝${NC}"
     echo ""
     echo -e "${CYAN}📝 Quick Start Guide:${NC}"
     echo ""
-    echo -e "${YELLOW}Step 1:${NC} Start OpenClaw Gateway"
+    echo -e "${YELLOW}Step 1(first-time):${NC} Setup openclaw config"
+    echo "  $ proot-distro login debian"
+    echo "  $ openclaw onboard"
+    echo ""
+    echo -e "${YELLOW}Step 2:${NC} Start OpenClaw Gateway"
     echo "  $ proot-distro login debian"
     echo "  $ start-claw"
     echo ""
-    echo -e "${YELLOW}Step 2:${NC} Open new Termux session (swipe left)"
+    echo -e "${YELLOW}Step 3:${NC} Open new Termux session (swipe left)"
     echo "  $ proot-distro login debian"
     echo "  $ openclaw tui"
     echo ""
@@ -388,7 +392,7 @@ show_completion() {
     echo "  Run 'termux-wake-lock' in Termux to prevent throttling"
     echo ""
     echo -e "${CYAN}🐛 Issues?${NC}"
-    echo "  Visit: ${BLUE}${REPO_URL}/issues${NC}"
+    echo "  Visit: ${REPO_URL}/issues"
     echo ""
 }
 
