@@ -3,16 +3,16 @@
 # OpenClaw Android Installer
 # Version: 2026.2.11
 # Description: Automated installer for OpenClaw on Android via Termux
-# Repository: https://github.com/iyeoh88-svg/openclaw-android
+# Repository: https://github.com/lawtkj/openclaw-android
 ################################################################################
 
 set -e  # Exit on error
 
 # Script Configuration
 SCRIPT_VERSION="2026.2.11"
-SCRIPT_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh"
-VERSION_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/VERSION"
-REPO_URL="https://github.com/iyeoh88-svg/openclaw-android"
+SCRIPT_URL="https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh"
+VERSION_URL="https://raw.githubusercontent.com/lawtkj/openclaw-android/main/VERSION"
+REPO_URL="https://github.com/lawtkj/openclaw-android"
 
 # Colors for output
 RED='\033[0;31m'
