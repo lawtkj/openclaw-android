@@ -189,41 +189,39 @@ install_termux_packages() {
     
     log_success "Termux packages installed"
 }
+# Install Ubuntu distribution
+install_ubuntu() {
+    log_step "Installing Ubuntu distribution..."
 
-# Install Debian distribution
-install_debian() {
-    log_step "Installing Debian distribution..."
-    
-    if proot-distro list | grep -q "debian.*installed"; then
-        log_warn "Debian already installed"
-        
+    if proot-distro list | grep -q "ubuntu.*installed"; then
+        log_warn "Ubuntu already installed"
+
         if [ "$REINSTALL" = "true" ]; then
-            log_info "Reinstalling Debian..."
-            proot-distro remove debian -y 2>/dev/null || true
-            proot-distro install debian
+            log_info "Reinstalling Ubuntu..."
+            proot-distro remove ubuntu -y 2>/dev/null || true
+            proot-distro install ubuntu
         else
-            echo -e "${YELLOW}Debian is already installed. Reinstall? (y/n)${NC}"
+            echo -e "${YELLOW}Ubuntu is already installed. Reinstall? (y/n)${NC}"
             read -r response < /dev/tty
             if [[ "$response" =~ ^[Yy]$ ]]; then
-                proot-distro remove debian -y
-                proot-distro install debian
+                proot-distro remove ubuntu -y
+                proot-distro install ubuntu
             else
-                log_info "Using existing Debian installation"
+                log_info "Using existing Ubuntu installation"
             fi
         fi
     else
-        proot-distro install debian
+        proot-distro install ubuntu
     fi
-    
-    log_success "Debian distribution ready"
+
+    log_success "Ubuntu distribution ready"
 }
 
-# Create setup script for Debian environment
-create_debian_setup() {
-    log_step "Creating Debian setup script..."
-    
-    # Use $HOME instead of /tmp to avoid permission issues
-    cat > "$HOME/debian_setup.sh" << 'DEBIAN_SCRIPT'
+# Create setup script for Ubuntu environment (with Bun)
+create_ubuntu_setup() {
+    log_step "Creating Ubuntu setup script..."
+
+    cat > "$HOME/ubuntu_setup.sh" <<'UBUNTU_SCRIPT'
 #!/bin/bash
 set -e
 
@@ -238,71 +236,57 @@ log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-echo -e "\n${GREEN}==> Setting up Debian environment...${NC}\n"
+echo -e "\n${GREEN}==> Setting up Ubuntu environment...${NC}\n"
 
-# Update Debian packages
-log_info "Updating Debian packages..."
+# Update Ubuntu packages
+log_info "Updating Ubuntu packages..."
 apt update && apt upgrade -y
 
-# Install dependencies
+# Install dependencies (include unzip + wget for Bun + DWAgent download)
 log_info "Installing build dependencies..."
-apt install -y curl git build-essential ca-certificates
+apt install -y curl git build-essential ca-certificates unzip wget
 
-# Install NVM
+# Install Bun (official installer)
+log_info "Installing Bun..."
+curl -fsSL https://bun.com/install | bash
+
+# Add Bun to PATH for future shells
+if ! grep -q 'BUN_INSTALL' ~/.bashrc 2>/dev/null; then
+  echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.bashrc
+  echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.bashrc
+fi
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Verify Bun
+bun --version >/dev/null
+log_success "Bun installed"
+
+# Install NVM (Node Version Manager) – still needed to install OpenClaw via npm
 if [ ! -d "$HOME/.nvm" ]; then
-    log_info "Installing NVM (Node Version Manager)..."
+    log_info "Installing NVM..."
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 fi
 
-# Source NVM - try multiple methods to ensure it loads
-log_info "Loading NVM..."
+# Load NVM
 export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-# Method 1: Direct source
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-    \. "$NVM_DIR/nvm.sh"
-elif [ -s "/root/.nvm/nvm.sh" ]; then
-    export NVM_DIR="/root/.nvm"
-    \. "$NVM_DIR/nvm.sh"
-fi
-
-# Method 2: Source from bashrc if NVM added it
-if [ -s "$HOME/.bashrc" ]; then
-    # Extract and source just the NVM lines
-    grep -q 'NVM_DIR' "$HOME/.bashrc" && . "$HOME/.bashrc"
-fi
-
-# Verify NVM is loaded
-if ! command -v nvm &> /dev/null; then
-    log_error "NVM failed to load. Trying manual load..."
-    # Last resort: manual load
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
-fi
-
-# Final verification
-if ! command -v nvm &> /dev/null; then
-    log_error "NVM installation failed or cannot be loaded"
-    log_info "Please check: ls -la $HOME/.nvm/"
+if ! command -v nvm >/dev/null 2>&1; then
+    log_error "NVM failed to load"
     exit 1
 fi
 
-log_success "NVM loaded successfully"
-
-# Install Node.js 22
+# Install Node.js 22 (OpenClaw requires Node 22+)
 log_info "Installing Node.js v22..."
 nvm install 22
 nvm use 22
 nvm alias default 22
+log_success "Node $(node --version) installed"
 
-# Verify Node installation
-NODE_VERSION=$(node --version)
-log_success "Node.js $NODE_VERSION installed"
-
-# Create OpenClaw networking shim
+# Android networking shim (avoids os.networkInterfaces() crashes)
 log_info "Creating Android networking fix..."
-cat > /root/openclaw-shim.cjs << 'EOF'
+cat > /root/openclaw-shim.cjs <<'EOF'
 const os = require('os');
 os.networkInterfaces = () => ({
   lo: [{
@@ -317,83 +301,78 @@ os.networkInterfaces = () => ({
 EOF
 log_success "Networking shim created"
 
-# Install OpenClaw
-log_info "Installing OpenClaw (this may take a few minutes)..."
+# Install OpenClaw (via npm)
+log_info "Installing OpenClaw (npm)..."
 npm install -g openclaw@latest
 
-# Verify installation
-if command -v openclaw &> /dev/null; then
-    OPENCLAW_VERSION=$(openclaw --version 2>/dev/null || echo "unknown")
-    log_success "OpenClaw $OPENCLAW_VERSION installed successfully"
-else
-    log_error "OpenClaw installation failed"
-    exit 1
-fi
+# Create a Bun wrapper for faster CLI usage
+log_info "Creating openclaw-bun wrapper..."
+cat > /usr/local/bin/openclaw-bun <<'SH'
+#!/bin/sh
+OPENCLAW_BIN="$(command -v openclaw)"
+exec bun "$OPENCLAW_BIN" "$@"
+SH
+chmod +x /usr/local/bin/openclaw-bun
+log_success "openclaw-bun ready"
 
-# Create convenient aliases
+# DWService agent bootstrap (download + chmod only)
+log_info "Downloading DWService agent installer..."
+cd /root
+wget -N https://www.dwservice.net/download/dwagent.sh
+chmod +x dwagent.sh
+log_success "DWAgent installer downloaded to /root/dwagent.sh"
+
+# Convenience aliases (Bun CLI + Node gateway)
 log_info "Setting up aliases..."
-cat >> ~/.bashrc << 'EOF'
+cat >> ~/.bashrc <<'EOF'
 
-# OpenClaw aliases
-alias start-claw='NODE_OPTIONS="--require /root/openclaw-shim.cjs" openclaw gateway --bind loopback'
+# OpenClaw (Bun-wrapped CLI for speed)
+alias oc='NODE_OPTIONS="--require /root/openclaw-shim.cjs" openclaw-bun'
+alias oc-onboard='NODE_OPTIONS="--require /root/openclaw-shim.cjs" openclaw-bun onboard'
+alias oc-tui='NODE_OPTIONS="--require /root/openclaw-shim.cjs" openclaw-bun tui'
+
+# Gateway (recommended to keep Node for stability)
+alias start-claw='NODE_OPTIONS="--require /root/openclaw-shim.cjs" openclaw gateway --bind loopback --port 18789 --verbose'
 alias update-openclaw='npm update -g openclaw'
-alias claw-status='ps aux | grep openclaw'
-alias claw-logs='tail -f ~/.openclaw/logs/*.log'
-
-# Welcome message
-echo ""
-echo -e "\033[0;36m╔═══════════════════════════════════════╗\033[0m"
-echo -e "\033[0;36m║  🦞 OpenClaw Environment Ready 🦞      ║\033[0m"
-echo -e "\033[0;36m╚═══════════════════════════════════════╝\033[0m"
-echo ""
-echo -e "\033[0;32mQuick Commands:\033[0m"
-echo "  start-claw      - Start OpenClaw gateway"
-echo "  openclaw tui    - Open terminal interface"
-echo "  openclaw onboard - Configure API keys"
-echo "  update-openclaw - Update to latest version"
-echo ""
 EOF
 
 source ~/.bashrc
 
-log_success "Debian environment setup complete!"
+log_success "Ubuntu environment setup complete!"
 
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║                                               ║${NC}"
 echo -e "${GREEN}║         ✅ Installation Complete! ✅           ║${NC}"
-echo -e "${GREEN}║                                               ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
-echo "1. Open a NEW Termux session (swipe left)"
-echo "2. Run: proot-distro login debian"
-echo "3. In Session 1: start-claw"
-echo "4. In Session 2: openclaw tui"
+echo "1) Open a NEW Termux session (swipe left)"
+echo "2) Run: proot-distro login ubuntu"
+echo "3) Start Gateway: start-claw"
+echo "4) Fast CLI via Bun: oc-onboard / oc-tui"
 echo ""
-DEBIAN_SCRIPT
+UBUNTU_SCRIPT
 
-    chmod +x "$HOME/debian_setup.sh"
+    chmod +x "$HOME/ubuntu_setup.sh"
     log_success "Setup script created"
 }
 
-# Execute Debian setup
-execute_debian_setup() {
-    log_step "Executing Debian environment setup..."
-    
+# Execute Ubuntu setup
+execute_ubuntu_setup() {
+    log_step "Executing Ubuntu environment setup..."
+
     log_info "This will take 5-10 minutes depending on your device..."
     log_info "Please be patient and do not close Termux"
-    
-    if proot-distro login debian -- /bin/bash -c "bash $HOME/debian_setup.sh"; then
-        log_success "Debian setup completed successfully"
-        # Clean up the setup script
-        rm -f "$HOME/debian_setup.sh"
+
+    if proot-distro login ubuntu -- /bin/bash -c "bash $HOME/ubuntu_setup.sh"; then
+        log_success "Ubuntu setup completed successfully"
+        rm -f "$HOME/ubuntu_setup.sh"
     else
-        log_error "Debian setup failed"
-        log_info "Setup script saved at: $HOME/debian_setup.sh"
+        log_error "Ubuntu setup failed"
+        log_info "Setup script saved at: $HOME/ubuntu_setup.sh"
         log_info "You can try running it manually:"
-        log_info "  proot-distro login debian"
-        log_info "  bash ~/debian_setup.sh"
+        log_info "  proot-distro login ubuntu"
+        log_info "  bash ~/ubuntu_setup.sh"
         exit 1
     fi
 }
@@ -435,11 +414,11 @@ show_completion() {
     echo "  $ start-claw"
     echo ""
     echo -e "${YELLOW}Step 2:${NC} Open new Termux session (swipe left)"
-    echo "  $ proot-distro login debian"
-    echo "  $ openclaw tui"
+    echo "  $ proot-distro login ubuntu"
+    echo "  $ openclaw oc-tui"
     echo ""
     echo -e "${CYAN}📚 Available Commands:${NC}"
-    echo "  start-claw       - Launch gateway"
+    echo "  start-claw       - Launch Node gateway"
     echo "  openclaw tui     - Open interface"
     echo "  openclaw onboard - Configure API"
     echo "  update-openclaw  - Update OpenClaw"
@@ -496,9 +475,9 @@ main() {
     check_storage
     
     install_termux_packages
-    install_debian
-    create_debian_setup
-    execute_debian_setup
+    install_ubuntu
+    create_ubuntu_setup
+    execute_ubuntu_setup
     create_helper_scripts
     
     show_completion
