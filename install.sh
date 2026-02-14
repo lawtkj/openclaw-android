@@ -246,6 +246,10 @@ apt update && apt upgrade -y
 log_info "Installing build dependencies..."
 apt install -y curl git build-essential ca-certificates unzip wget
 
+# Install Node 22
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+apt install -y nodejs
+
 # Install Bun (official installer)
 log_info "Installing Bun..."
 curl -fsSL https://bun.com/install | bash
@@ -300,6 +304,33 @@ os.networkInterfaces = () => ({
 });
 EOF
 log_success "Networking shim created"
+
+# The "Bionic Bypass" (Crucial): preload safe networkInterfaces() globally
+log_info "Applying Bionic Bypass (NODE_OPTIONS preload)..."
+
+cat > /root/hijack.js <<'JS'
+const os = require('os');
+os.networkInterfaces = () => ({
+  lo: [{
+    address: '127.0.0.1',
+    netmask: '255.0.0.0',
+    family: 'IPv4',
+    mac: '00:00:00:00:00:00',
+    internal: true,
+    cidr: '127.0.0.1/8'
+  }]
+});
+JS
+
+# Persist for future shells
+if ! grep -q 'export NODE_OPTIONS="-r /root/hijack.js"' ~/.bashrc 2>/dev/null; then
+  echo 'export NODE_OPTIONS="-r /root/hijack.js"' >> ~/.bashrc
+fi
+
+# Apply for the current setup run too
+export NODE_OPTIONS="-r /root/hijack.js"
+
+log_success "Bionic Bypass enabled (NODE_OPTIONS=-r /root/hijack.js)"
 
 # Install OpenClaw (via npm)
 log_info "Installing OpenClaw (npm)..."
@@ -382,14 +413,14 @@ create_helper_scripts() {
     log_step "Creating helper scripts..."
     
     # Create launcher script
-    cat > "$HOME/start-openclaw.sh" << 'LAUNCHER'
+    cat > "$HOME/start-openclaw.sh" <<'LAUNCHER'
 #!/data/data/com.termux/files/usr/bin/bash
 echo "Starting OpenClaw..."
 echo ""
-echo "Opening Debian environment..."
-proot-distro login debian
+echo "Opening Ubuntu environment..."
+proot-distro login ubuntu
 LAUNCHER
-    chmod +x "$HOME/start-openclaw.sh"
+chmod +x "$HOME/start-openclaw.sh"
     
     log_success "Helper scripts created in: $HOME"
 }
@@ -410,7 +441,7 @@ show_completion() {
     echo -e "${CYAN}📝 Quick Start Guide:${NC}"
     echo ""
     echo -e "${YELLOW}Step 1:${NC} Start OpenClaw Gateway"
-    echo "  $ proot-distro login debian"
+    echo "  $ proot-distro login ubuntu"
     echo "  $ start-claw"
     echo ""
     echo -e "${YELLOW}Step 2:${NC} Open new Termux session (swipe left)"
