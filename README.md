@@ -35,7 +35,7 @@ OpenClaw is a powerful AI agent framework that can now run natively on Android d
 -  **Auto-Update System** - Script checks for updates on every run
 -  **Android Networking Fix** - Automatically patches the Error 13 issue
 -  **Optimized for Android 12+** - Tested on modern Android devices
--  **Minimal Storage Impact** - Efficient PRoot Debian environment
+-  **Minimal Storage Impact** - Efficient PRoot Ubuntu environment
 
 ## 📋 Prerequisites
 
@@ -54,17 +54,13 @@ Run this command in Termux:
 # Termux main terminal
 curl -fsSL https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh | bash
 
-# First time setup (enter debian)
+# First time setup (enter Ubuntu)
 proot-distro login ubuntu
 
-# Run the openclaw setup wizard (inside debian)
+# Run the openclaw setup wizard (inside Ubuntu)
 openclaw onboard
 
 ```
-
-```bash
-# If you see this error after the setup wizard, ignore it and proceed to [Start Up]. It will still work.
-"SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_interface_addresses returned Unknown system error 13 (Unknown system error 13)"
 
 ```
 
@@ -86,7 +82,7 @@ chmod +x install.sh
 The script automatically:
 
 1.  Updates Termux packages
-2.  Installs and configures PRoot-Distro with Debian
+2.  Installs and configures PRoot-Distro with Ubuntu
 3.  Installs Node.js v22 via NVM
 4.  Creates networking shim to fix Android Error 13
 5.  Installs OpenClaw globally
@@ -102,18 +98,18 @@ After installation, use these simple commands:
 **Session 1 - Gateway (The Brain)**
 ```bash
 # In Termux
-proot-distro login debian
+proot-distro login ubuntu
 
-# Inside Debian
+# Inside Ubuntu
 start-claw
 ```
 
 **Session 2 - TUI (The Interface)**
 ```bash
 # Swipe left in Termux to open new session
-proot-distro login debian
+proot-distro login ubuntu
 
-# Inside Debian
+# Inside ubuntu
 openclaw tui
 ```
 
@@ -131,7 +127,7 @@ openclaw tui
 If OpenClaw is running slowly:
 
 ```bash
-# In standard Termux (not Debian)
+# In standard Termux (not ubuntu)
 termux-wake-lock
 ```
 
@@ -140,7 +136,7 @@ This prevents Android from throttling CPU when the screen is off.
 ### Storage Issues
 
 ```bash
-# Inside Debian
+# Inside ubuntu
 npm cache clean --force
 apt clean
 ```
@@ -148,7 +144,7 @@ apt clean
 ### API Configuration
 
 ```bash
-# Inside Debian
+# Inside Ubuntu
 openclaw onboard
 ```
 
