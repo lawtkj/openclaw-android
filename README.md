@@ -55,7 +55,7 @@ Run this command in Termux:
 curl -fsSL https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh | bash
 
 # First time setup (enter debian)
-proot-distro login debian
+proot-distro login ubuntu
 
 # Run the openclaw setup wizard (inside debian)
 openclaw onboard
