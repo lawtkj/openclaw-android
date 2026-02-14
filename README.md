@@ -1,4 +1,4 @@
-# 🦞 OpenClaw for Android (Termux)
+# 🦞 OpenClaw for Android (Termux) Ubuntu
 
 [![Version](https://img.shields.io/badge/version-2026.2.11-blue.svg)](https://github.com/iyeoh88-svg/openclaw-android)
 [![Android](https://img.shields.io/badge/Android-12%2B-green.svg)](https://www.android.com/)
@@ -21,7 +21,7 @@
 -  **Creator**: This installer was created by [@iyeoh88-svg](https://github.com/iyeoh88-svg) to simplify the Android installation process
 -  **Purpose**: To automate the complex setup process and make OpenClaw accessible on Android devices
 
-**All credit for OpenClaw goes to its original creators and maintainers.**
+**All credit for OpenClaw goes to its original creators and maintainers.** (iyeoh88-svg/openclaw-android)
 
  **[Read Full Disclaimer](DISCLAIMER.md)** - Please read to understand the scope of this project
 
