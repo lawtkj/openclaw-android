@@ -52,7 +52,7 @@ Run this command in Termux:
 
 ```bash
 # Termux main terminal
-curl -fsSL https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh | bash
 
 # First time setup (enter debian)
 proot-distro login debian
@@ -72,7 +72,7 @@ openclaw onboard
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
+curl -O https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh
 
 # Make it executable
 chmod +x install.sh
