@@ -194,61 +194,73 @@ install_termux_packages() {
 install_debian() {
     log_step "Checking Debian installation status..."
     
-    # Temporarily disable exit-on-error for the check
+    # Check if Debian is installed - use multiple methods for reliability
     set +e
-    DEBIAN_INSTALLED=$(proot-distro list 2>&1 | grep -c "debian.*installed")
+    
+    # Method 1: Check if debian appears in installed list
+    proot-distro list --installed-only 2>/dev/null | grep -q "debian"
+    METHOD1=$?
+    
+    # Method 2: Check if debian directory exists
+    if [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/debian" ]; then
+        METHOD2=0
+    else
+        METHOD2=1
+    fi
+    
     set -e
     
-    if [ "$DEBIAN_INSTALLED" -gt 0 ]; then
+    # If EITHER method finds Debian, it's installed
+    if [ $METHOD1 -eq 0 ] || [ $METHOD2 -eq 0 ]; then
         log_warn "Debian is already installed"
         
         if [ "$REINSTALL" = "true" ]; then
-            log_info "Reinstalling Debian..."
-            proot-distro remove debian -y 2>/dev/null || true
-            sleep 1
+            log_info "Reinstalling Debian (--reinstall flag)..."
+            proot-distro remove debian -y
             proot-distro install debian
             return 0
         fi
         
         echo ""
-        echo -e "${YELLOW}╔════════════════════════════════════════════════╗${NC}"
-        echo -e "${YELLOW}║  Debian is already installed                  ║${NC}"
-        echo -e "${YELLOW}╚════════════════════════════════════════════════╝${NC}"
+        echo -e "${YELLOW}═══════════════════════════════════════${NC}"
+        echo -e "${YELLOW}   Debian is already installed${NC}"
+        echo -e "${YELLOW}═══════════════════════════════════════${NC}"
         echo ""
         echo "What would you like to do?"
         echo ""
-        echo "  [1] Keep existing Debian and add openclaw user"
-        echo "  [2] Fresh install (removes existing Debian)"  
-        echo "  [3] Exit installer"
+        echo "  [1] Keep existing and add openclaw user"
+        echo "  [2] Fresh install (removes existing)"  
+        echo "  [3] Exit"
         echo ""
-        echo -n "Enter your choice [1-3]: "
+        echo -n "Choice [1-3]: "
         
         read response
         echo ""
         
         case "$response" in
             1)
-                log_info "Upgrading existing Debian..."
+                log_info "Using existing Debian installation"
                 return 0
                 ;;
             2)
                 log_info "Removing existing Debian..."
-                proot-distro remove debian -y 2>/dev/null || true
-                sleep 1
+                proot-distro remove debian -y
                 log_info "Installing fresh Debian..."
                 proot-distro install debian
                 return 0
                 ;;
             3)
+                log_info "Exiting..."
                 exit 0
                 ;;
             *)
-                log_info "Using existing Debian..."
+                log_info "Using existing Debian (default)"
                 return 0
                 ;;
         esac
     else
-        log_info "Installing Debian..."
+        # Debian NOT installed - install it
+        log_info "Installing Debian distribution..."
         proot-distro install debian
         return 0
     fi
