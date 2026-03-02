@@ -216,7 +216,7 @@ install_debian() {
         
         if [ "$REINSTALL" = "true" ]; then
             log_info "Reinstalling Debian (--reinstall flag)..."
-            proot-distro remove debian -y
+            proot-distro remove debian
             proot-distro install debian
             return 0
         fi
@@ -245,7 +245,7 @@ install_debian() {
                 ;;
             2)
                 log_info "Removing existing Debian..."
-                proot-distro remove debian -y
+                proot-distro remove debian
                 log_info "Installing fresh Debian..."
                 proot-distro install debian
                 return 0
