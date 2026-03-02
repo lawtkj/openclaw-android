@@ -234,7 +234,8 @@ install_debian() {
         echo ""
         echo -n "Choice [1-3]: "
         
-        read response
+        read -r response < /dev/tty
+        
         echo ""
         
         case "$response" in
