@@ -1,6 +1,6 @@
 # 🦞 OpenClaw for Android (Termux)
 
-[![Version](https://img.shields.io/badge/version-2026.2.14-blue.svg)](https://github.com/iyeoh88-svg/openclaw-android)
+[![Version](https://img.shields.io/badge/version-2026.2.15-blue.svg)](https://github.com/iyeoh88-svg/openclaw-android)
 [![Android](https://img.shields.io/badge/Android-12%2B-green.svg)](https://www.android.com/)
 [![Termux](https://img.shields.io/badge/Termux-Required-orange.svg)](https://termux.dev/)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
@@ -10,26 +10,18 @@
 > **Automated installer for running OpenClaw AI agent system on Android devices via Termux**
 
 ---
+## 🌸Quick Start🌸
 
-##  What's New in v2026.2.14
+### One-Line Install (Recommended)
 
-**Major Architecture Update - Non-Root User Implementation**
+Open Termux and run:
 
--  **Dedicated User**: OpenClaw now runs as `openclaw` user (not root)
--  **Homebrew Support**: Install Homebrew and other dev tools that refuse to run as root
--  **Better Security**: Follows Linux best practices with passwordless sudo
--  **9 Critical Bugs Fixed**: Based on extensive community testing
--  **Broad Compatibility**: Tested on Android 7-16, F-Droid & Play Store Termux
-
-**⚠️ Breaking Change**: New login command required:
 ```bash
-proot-distro login debian --user openclaw
+curl -fsSL https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh | bash
 ```
-
-[See Upgrade Guide](GUIDE.md#upgrading-from-older-versions) if updating from v2026.2.13 or earlier.
+**Wait 5-15 minutes** for automated installation to complete.
 
 ---
-
 ## ⚠️ Important Disclaimer
 
 **This project is an independent installer/automation tool created by the community.**
@@ -66,17 +58,6 @@ proot-distro login debian --user openclaw
 - **Stable internet connection**
 
 > ⚠️ **Critical**: Do NOT use Termux from Google Play Store. The F-Droid version is actively maintained and required for compatibility.
-
-##  Quick Start
-
-### One-Line Install (Recommended)
-
-Open Termux and run:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh | bash
-```
-**Wait 5-15 minutes** for automated installation to complete.
 
 
 ### Manual Download & Install
