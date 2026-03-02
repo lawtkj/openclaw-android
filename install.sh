@@ -194,6 +194,10 @@ install_termux_packages() {
 install_debian() {
     log_step "Installing Debian distribution..."
     
+    # Initialize the upgrade flag
+    UPGRADE_EXISTING=false
+    
+    # Check if Debian is already installed
     if proot-distro list | grep -q "debian.*installed"; then
         log_warn "Debian already installed"
         
@@ -203,7 +207,7 @@ install_debian() {
             proot-distro install debian
         else
             echo -e "${YELLOW}Debian is already installed. What would you like to do?${NC}"
-            echo "  [1] Keep existing Debian and upgrade to v2026.2.15 (adds openclaw user)"
+            echo "  [1] Keep existing Debian and upgrade to v2026.2.16 (adds openclaw user)"
             echo "  [2] Fresh install (removes existing Debian and reinstalls)"
             echo "  [3] Skip and exit"
             echo ""
@@ -212,33 +216,33 @@ install_debian() {
             
             case "$response" in
                 1)
-                    log_info "Upgrading existing Debian to v2026.2.14 architecture..."
+                    log_info "Upgrading existing Debian..."
                     UPGRADE_EXISTING=true
+                    # KEY: Don't call proot-distro install - use existing
                     ;;
                 2)
                     log_info "Performing fresh install..."
                     proot-distro remove debian -y 2>/dev/null || true
                     proot-distro install debian
-                    UPGRADE_EXISTING=false
                     ;;
                 3)
                     log_info "Installation cancelled by user"
                     exit 0
                     ;;
                 *)
-                    log_warn "Invalid choice. Using existing Debian installation."
+                    log_warn "Invalid choice. Defaulting to upgrade."
                     UPGRADE_EXISTING=true
                     ;;
             esac
         fi
     else
+        # Debian not installed - install it
+        log_info "Installing fresh Debian..."
         proot-distro install debian
-        UPGRADE_EXISTING=false
     fi
     
     log_success "Debian distribution ready"
 }
-
 # Create setup script for Debian environment
 create_debian_setup() {
     log_step "Creating Debian setup script..."
