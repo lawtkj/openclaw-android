@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 ################################################################################
 # OpenClaw Android Installer
-# Version: 2026.2.14
+# Version: 2026.2.15
 # Description: Automated installer for OpenClaw on Android via Termux
 # Repository: https://github.com/iyeoh88-svg/openclaw-android
 ################################################################################
@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 # Script Configuration
-SCRIPT_VERSION="2026.2.14"
+SCRIPT_VERSION="2026.2.15"
 SCRIPT_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh"
 VERSION_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/VERSION"
 REPO_URL="https://github.com/iyeoh88-svg/openclaw-android"
@@ -198,21 +198,42 @@ install_debian() {
         log_warn "Debian already installed"
         
         if [ "$REINSTALL" = "true" ]; then
-            log_info "Reinstalling Debian..."
+            log_info "Reinstalling Debian (fresh start)..."
             proot-distro remove debian -y 2>/dev/null || true
             proot-distro install debian
         else
-            echo -e "${YELLOW}Debian is already installed. Reinstall? (y/n)${NC}"
+            echo -e "${YELLOW}Debian is already installed. What would you like to do?${NC}"
+            echo "  [1] Keep existing Debian and upgrade to v2026.2.14 (adds openclaw user)"
+            echo "  [2] Fresh install (removes existing Debian and reinstalls)"
+            echo "  [3] Skip and exit"
+            echo ""
+            echo -n "Enter your choice (1/2/3): "
             read -r response < /dev/tty
-            if [[ "$response" =~ ^[Yy]$ ]]; then
-                proot-distro remove debian -y
-                proot-distro install debian
-            else
-                log_info "Using existing Debian installation"
-            fi
+            
+            case "$response" in
+                1)
+                    log_info "Upgrading existing Debian to v2026.2.14 architecture..."
+                    UPGRADE_EXISTING=true
+                    ;;
+                2)
+                    log_info "Performing fresh install..."
+                    proot-distro remove debian -y 2>/dev/null || true
+                    proot-distro install debian
+                    UPGRADE_EXISTING=false
+                    ;;
+                3)
+                    log_info "Installation cancelled by user"
+                    exit 0
+                    ;;
+                *)
+                    log_warn "Invalid choice. Using existing Debian installation."
+                    UPGRADE_EXISTING=true
+                    ;;
+            esac
         fi
     else
         proot-distro install debian
+        UPGRADE_EXISTING=false
     fi
     
     log_success "Debian distribution ready"
@@ -255,17 +276,24 @@ apt install -y curl git build-essential ca-certificates sudo
 # -----------------------------------------------------------------------
 # Step 2 – Create dedicated non-root user "openclaw"
 # -----------------------------------------------------------------------
-log_step "Creating dedicated user 'openclaw'..."
+log_step "Setting up dedicated user 'openclaw'..."
 
 if id "openclaw" &>/dev/null; then
-    log_info "User 'openclaw' already exists, skipping creation"
+    log_info "User 'openclaw' already exists"
+    
+    # Ensure user has sudo access
+    if ! grep -q "^openclaw" /etc/sudoers 2>/dev/null; then
+        echo "openclaw ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+        log_success "Sudo access granted to 'openclaw'"
+    else
+        log_info "User already has sudo access"
+    fi
 else
+    log_info "Creating user 'openclaw'..."
     useradd -m -s /bin/bash openclaw
     log_success "User 'openclaw' created"
-fi
-
-# Give passwordless sudo so the user can install packages if needed
-if ! grep -q "^openclaw" /etc/sudoers 2>/dev/null; then
+    
+    # Give passwordless sudo
     echo "openclaw ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
     log_success "Sudo access granted to 'openclaw'"
 fi
@@ -487,7 +515,7 @@ show_completion() {
     echo "  Run 'termux-wake-lock' in Termux to prevent throttling"
     echo ""
     echo -e "${CYAN}🐛 Issues?${NC}"
-    echo "  Visit: ${REPO_URL}/issues"
+    echo "  Visit: {REPO_URL}/issues"
     echo ""
 }
 
