@@ -216,7 +216,7 @@ install_debian() {
         
         if [ "$REINSTALL" = "true" ]; then
             log_info "Reinstalling Debian (--reinstall flag)..."
-            proot-distro remove debian
+            proot-distro remove debian 2>/dev/null || true
             proot-distro install debian
             return 0
         fi
@@ -292,11 +292,9 @@ echo -e "\n${GREEN}==> Setting up Debian environment...${NC}\n"
 # -----------------------------------------------------------------------
 # Step 0 – Fix any interrupted dpkg operations (for existing installations)
 # -----------------------------------------------------------------------
-if [ -f "/var/lib/dpkg/updates" ] || [ -f "/var/lib/dpkg/lock" ]; then
-    log_step "Checking for interrupted package operations..."
-    dpkg --configure -a 2>/dev/null || true
-    apt-get -f install -y 2>/dev/null || true
-fi
+log_step "Checking for interrupted package operations..."
+dpkg --configure -a 2>/dev/null || true
+apt-get -f install -y 2>/dev/null || true
 
 # -----------------------------------------------------------------------
 # Step 1 – Base packages (runs as root)
