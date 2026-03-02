@@ -549,7 +549,7 @@ show_completion() {
     echo "  Run 'termux-wake-lock' in Termux to prevent throttling"
     echo ""
     echo -e "${CYAN}🐛 Issues?${NC}"
-    echo "  Visit: {REPO_URL}/issues"
+    echo "  Visit: ${REPO_URL}/issues"
     echo ""
 }
 
