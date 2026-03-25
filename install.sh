@@ -3,16 +3,16 @@
 # OpenClaw Android Installer
 # Version: 2026.2.15
 # Description: Automated installer for OpenClaw on Android via Termux
-# Repository: https://github.com/iyeoh88-svg/openclaw-android
+# Repository: https://github.com/lawtkj/openclaw-android
 ################################################################################
 
 set -e  # Exit on error
 
 # Script Configuration
 SCRIPT_VERSION="2026.2.15"
-SCRIPT_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh"
-VERSION_URL="https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/VERSION"
-REPO_URL="https://github.com/iyeoh88-svg/openclaw-android"
+SCRIPT_URL="https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh"
+VERSION_URL="https://raw.githubusercontent.com/lawtkj/openclaw-android/main/VERSION"
+REPO_URL="https://github.com/lawtkj/openclaw-android"
 
 # Colors for output
 RED='\033[0;31m'
@@ -198,11 +198,11 @@ install_debian() {
     set +e
     
     # Method 1: Check if debian appears in installed list
-    proot-distro list --installed-only 2>/dev/null | grep -q "debian"
+    proot-distro list --installed-only 2>/dev/null | grep -q "ubuntu"
     METHOD1=$?
     
-    # Method 2: Check if debian directory exists
-    if [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/debian" ]; then
+    # Method 2: Check if ubuntu directory exists
+    if [ -d "$PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu" ]; then
         METHOD2=0
     else
         METHOD2=1
@@ -216,14 +216,14 @@ install_debian() {
         
         if [ "$REINSTALL" = "true" ]; then
             log_info "Reinstalling Debian (--reinstall flag)..."
-            proot-distro remove debian 2>/dev/null || true
-            proot-distro install debian
+            proot-distro remove ubuntu 2>/dev/null || true
+            proot-distro install ubuntu
             return 0
         fi
         
         echo ""
         echo -e "${YELLOW}═══════════════════════════════════════${NC}"
-        echo -e "${YELLOW}   Debian is already installed${NC}"
+        echo -e "${YELLOW}   ubuntu is already installed${NC}"
         echo -e "${YELLOW}═══════════════════════════════════════${NC}"
         echo ""
         echo "What would you like to do?"
@@ -245,9 +245,9 @@ install_debian() {
                 ;;
             2)
                 log_info "Removing existing Debian..."
-                proot-distro remove debian
+                proot-distro remove ubuntu
                 log_info "Installing fresh Debian..."
-                proot-distro install debian
+                proot-distro install ubuntu
                 return 0
                 ;;
             3)
@@ -262,7 +262,7 @@ install_debian() {
     else
         # Debian NOT installed - install it
         log_info "Installing Debian distribution..."
-        proot-distro install debian
+        proot-distro install ubuntu
         return 0
     fi
 }
@@ -287,7 +287,7 @@ log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 log_error()   { echo -e "${RED}[ERROR]${NC} $1"; }
 log_step()    { echo -e "\n${GREEN}==>${NC} $1"; }
 
-echo -e "\n${GREEN}==> Setting up Debian environment...${NC}\n"
+echo -e "\n${GREEN}==> Setting up ubuntu environment...${NC}\n"
 
 # -----------------------------------------------------------------------
 # Step 0 – Fix any interrupted dpkg operations (for existing installations)
