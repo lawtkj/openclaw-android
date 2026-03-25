@@ -1,11 +1,11 @@
 # 🦞 OpenClaw for Android (Termux)
 
-[![Version](https://img.shields.io/badge/version-2026.2.15-blue.svg)](https://github.com/iyeoh88-svg/openclaw-android)
+[![Version](https://img.shields.io/badge/version-2026.2.15-blue.svg)](https://github.com/lawtkj/openclaw-android)
 [![Android](https://img.shields.io/badge/Android-12%2B-green.svg)](https://www.android.com/)
 [![Termux](https://img.shields.io/badge/Termux-Required-orange.svg)](https://termux.dev/)
 [![License](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/iyeoh88-svg/openclaw-android.svg)](https://github.com/iyeoh88-svg/openclaw-android/stargazers)
-[![Issues](https://img.shields.io/github/issues/iyeoh88-svg/openclaw-android.svg)](https://github.com/iyeoh88-svg/openclaw-android/issues)
+[![Stars](https://img.shields.io/github/stars/lawtkj/openclaw-android.svg)](https://github.com/lawtkj/openclaw-android/stargazers)
+[![Issues](https://img.shields.io/github/issues/lawtkj/openclaw-android.svg)](https://github.com/lawtkj/openclaw-android/issues)
 
 > **Automated installer for running OpenClaw AI agent system on Android devices via Termux**
 
@@ -17,7 +17,7 @@
 Open Termux and run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh | bash
 ```
 **Wait 5-15 minutes** for automated installation to complete.
 
@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/i
 -  **What this is**: An automated installation script that makes it easy to run OpenClaw on Android
 -  **What this is NOT**: I did not create OpenClaw itself
 -  **OpenClaw**: Visit the [official OpenClaw project](https://github.com/openclaw/openclaw) for the actual AI agent framework
--  **Creator**: This installer was created by [@iyeoh88-svg](https://github.com/iyeoh88-svg) to simplify the Android installation process
+-  **Creator**: This installer was created by [@lawtkj](https://github.com/lawtkj) to simplify the Android installation process
 -  **Purpose**: To automate the complex setup process and make OpenClaw accessible on Android devices
 
 **All credit for OpenClaw goes to its original creators and maintainers.**
@@ -66,7 +66,7 @@ If you prefer to review the script first:
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
+curl -O https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh
 
 # Review it (optional)
 less install.sh
@@ -230,7 +230,7 @@ The installer auto-checks for updates. To force update:
 
 ```bash
 # In Termux
-curl -O https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh
+curl -O https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh
 chmod +x install.sh
 ./install.sh --reinstall
 ```
@@ -261,7 +261,7 @@ See the [complete upgrade guide](GUIDE.md#upgrading-from-older-versions) for:
 
 1. **Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Comprehensive solutions
 2. **Check [GUIDE.md](GUIDE.md)** - Detailed setup instructions
-3. **Search [Issues](https://github.com/iyeoh88-svg/openclaw-android/issues)** - Known problems
+3. **Search [Issues](https://github.com/lawtkj/openclaw-android/issues)** - Known problems
 4. **Open new issue** - With Android version, error messages, and steps to reproduce
 
 For **OpenClaw-specific issues** (features, AI models, usage): Visit the official OpenClaw repository.
@@ -309,7 +309,7 @@ Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 - This installer is a community contribution to make OpenClaw accessible on Android
 
 ### This Installer Project
-- **Created by**: [@iyeoh88-svg](https://github.com/iyeoh88-svg)
+- **Created by**: [@lawtkj](https://github.com/lawtkj)
 - **Purpose**: Automated installation tool for Android/Termux
 - **Status**: Not affiliated with or endorsed by the official OpenClaw team
 
@@ -331,9 +331,9 @@ This installer is licensed under the **MIT License** - see [LICENSE](LICENSE) fo
 ## 📞 Support & Community
 
 ### For Installer Issues
-- **Bug Reports**: [GitHub Issues](https://github.com/iyeoh88-svg/openclaw-android/issues)
-- **Questions**: [GitHub Discussions](https://github.com/iyeoh88-svg/openclaw-android/discussions)
-- **Feature Requests**: [GitHub Issues](https://github.com/iyeoh88-svg/openclaw-android/issues)
+- **Bug Reports**: [GitHub Issues](https://github.com/lawtkj/openclaw-android/issues)
+- **Questions**: [GitHub Discussions](https://github.com/lawtkj/openclaw-android/discussions)
+- **Feature Requests**: [GitHub Issues](https://github.com/lawtkj/openclaw-android/issues)
 
 ### For OpenClaw Issues
 - Visit the **official OpenClaw repository**
@@ -373,9 +373,9 @@ It helps others discover the project and motivates continued development.
 
 ## 🔗 Quick Links
 
-- **Download**: [install.sh](https://raw.githubusercontent.com/iyeoh88-svg/openclaw-android/main/install.sh)
-- **Issues**: [Report a bug](https://github.com/iyeoh88-svg/openclaw-android/issues/new)
-- **Discussions**: [Ask questions](https://github.com/iyeoh88-svg/openclaw-android/discussions)
+- **Download**: [install.sh](https://raw.githubusercontent.com/lawtkj/openclaw-android/main/install.sh)
+- **Issues**: [Report a bug](https://github.com/lawtkj/openclaw-android/issues/new)
+- **Discussions**: [Ask questions](https://github.com/lawtkj/openclaw-android/discussions)
 - **Changelog**: [Version history](CHANGELOG.md)
 - **Guide**: [Detailed instructions](GUIDE.md)
 
